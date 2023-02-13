@@ -10,5 +10,8 @@
     "watch": "json-server db.json --port=8000"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "json-server": "^0.17.1"
+  }
 }
