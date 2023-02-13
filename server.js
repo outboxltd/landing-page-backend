@@ -2,6 +2,7 @@
 const jsonServer = require('json-server')
 const clone = require('clone')
 const data = require('./db.json')
+const cors = require('cors');
 
 const isProductionEnv = process.env.NODE_ENV === 'production';
 const server = jsonServer.create()
@@ -13,6 +14,7 @@ const router = jsonServer.router(isProductionEnv ? clone(data) : 'db.json', {
 const middlewares = jsonServer.defaults()
 
 server.use(middlewares)
+server.use(cors());
 
 server.use((req, res, next) => {
     if (req.path !== '/')

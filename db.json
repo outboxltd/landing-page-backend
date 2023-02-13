@@ -19,6 +19,16 @@
       "description2": "second desc",
       "title3": "third title",
       "description3": "third desc"
+    },
+    {
+      "id": 3,
+      "brand": "My company 2",
+      "title1": "first title",
+      "description1": "first description",
+      "title2": "second title",
+      "description2": "second desc",
+      "title3": "third title",
+      "description3": "third desc"
     }
   ]
 }
