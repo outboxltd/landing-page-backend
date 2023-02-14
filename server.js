@@ -18,6 +18,16 @@ app.use(express.urlencoded({ extended: true }));
 
 const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://landing-page-backend.onrender.com/' : 'http://localhost:8000';
 
+app.get('/', (req, res) => {
+    fs.readFile(dbPath, (err, data) => {
+        if (err) {
+            res.status(500).send({ message: 'Failed to read database.' });
+        } else {
+            res.send(JSON.parse(data));
+        }
+    });
+});
+
 app.get('/:id', (req, res) => {
     fs.readFile(dbPath, (err, data) => {
         if (err) {
