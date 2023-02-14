@@ -2,45 +2,71 @@
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
+const upload = require('./upload.js')
 
 const app = express();
 const port = process.env.PORT || 8000;
 const dbPath = './db.json';
 
+
+
+
 app.use(express.json());
 app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-    fs.readFile(dbPath, (err, data) => {
-        if (err) {
-            res.status(500).send({ message: 'Failed to read database.' });
-        } else {
-            res.send(JSON.parse(data));
-        }
-    });
-});
+
+const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://landing-page-backend.onrender.com/' : 'http://localhost:8000';
 
 app.get('/:id', (req, res) => {
-    console.log(req.params.id);
     fs.readFile(dbPath, (err, data) => {
         if (err) {
             return res.status(500).send({ message: 'Error reading database file' });
         }
 
         const db = JSON.parse(data);
-        console.log(db);
+
         const item = db.find((item) => item.id === parseInt(req.params.id));
-        console.log(item);
         if (!item) {
             return res.status(404).send({ message: 'Item not found' });
         }
 
+
+        item.image1 = `${BASE_URL}/uploads/${item.image1}`;
+        item.image2 = `${BASE_URL}/uploads/${item.image2}`;
+        item.image3 = `${BASE_URL}/uploads/${item.image3}`;
+        item.hero = `${BASE_URL}/uploads/${item.hero}`;
+
+        // res.set('Content-Type','image/jpg')
         res.send(item);
     });
 });
 
-app.post('/companies', (req, res) => {
+
+app.get('/:id/uploads/:imageName', function(req, res) {
+    const item = db.find((item) => item.id === parseInt(req.params.id));
+    var image = req.params['imageName'];
+    // if(item.findIndex(image)<0){
+    //     res.end(403)
+    // }
+    res.header('Content-Type', "image/jpg");
+    fs.readFile("uploads/"+image, function(err, data){
+      if(err){
+        res.end(404);
+      }
+      res.send(data)    
+    });
+  });
+
+
+app.post('/', upload.fields([
+    { name: 'hero', maxCount: 1 },
+    { name: 'image1', maxCount: 1 },
+    { name: 'image2', maxCount: 1 },
+    { name: 'image3', maxCount: 1 }
+]), (req, res) => {
     fs.readFile('./db.json', 'utf-8', (err, data) => {
+
         if (err) {
             return res.status(500).json({ message: 'Error reading file.' });
         }
@@ -48,7 +74,12 @@ app.post('/companies', (req, res) => {
         const db = JSON.parse(data);
         const newCompany = {
             id: db.length + 1,
-            ...req.body,
+            brand: req.body.brand,
+            hero: req.files.hero[0].filename,
+            image1: req.files.image1[0].filename,
+            image2: req.files.image2[0].filename,
+            image3: req.files.image3[0].filename,
+            ...req.body
         };
         db.push(newCompany);
 
