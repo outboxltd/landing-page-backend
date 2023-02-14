@@ -49,7 +49,7 @@ app.get('/:id', (req, res) => {
 });
 
 
-app.get('/:id/uploads/:imageName', function(req, res) {
+app.get('/uploads/:imageName', function(req, res) {
     // const item = db.find((item) => item.id === parseInt(req.params.id));
     var image = req.params['imageName'];
     // if(item.findIndex(image)<0){
