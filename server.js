@@ -32,10 +32,6 @@ app.get('/:id', (req, res) => {
         }
 
 
-        item.image1 = `${BASE_URL}/uploads/${item.image1}`;
-        item.image2 = `${BASE_URL}/uploads/${item.image2}`;
-        item.image3 = `${BASE_URL}/uploads/${item.image3}`;
-        item.hero = `${BASE_URL}/uploads/${item.hero}`;
 
         // res.set('Content-Type','image/jpg')
         res.send(item);
@@ -44,7 +40,7 @@ app.get('/:id', (req, res) => {
 
 
 app.get('/:id/uploads/:imageName', function(req, res) {
-    const item = db.find((item) => item.id === parseInt(req.params.id));
+    // const item = db.find((item) => item.id === parseInt(req.params.id));
     var image = req.params['imageName'];
     // if(item.findIndex(image)<0){
     //     res.end(403)
