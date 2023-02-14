@@ -6,14 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "NODE_ENV=development node server.js",
-    "start": "NODE_ENV=production node server.js",
-    "watch": "json-server db.json --port=8000"
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "clone": "^2.1.2",
     "cors": "^2.8.5",
-    "json-server": "^0.17.1"
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }

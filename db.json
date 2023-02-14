@@ -1,34 +1,42 @@
-{
-  "companies": [
-    {
-      "id": 1,
-      "brand": "My company",
-      "title1": "Fully Responsive Design",
-      "description1": "When you use a theme created with Bootstrap, you know that the theme will look great on any device, whether it's a phone, tablet, or desktop the page will behave responsively!",
-      "title2": "Updated For Bootstrap 5",
-      "description2": "Newly improved, and full of great utility classNamees, Bootstrap 5 is leading the way in mobile responsive web development! All of the themes are now using Bootstrap 5!",
-      "title3": "Easy to Use & Customize",
-      "description3": "Landing Page is just HTML and CSS with a splash of SCSS for users who demand some deeper customization options. Out of the box, just add your content and images, and your new landing page will be ready to go!"
-    },
-    {
-      "id": 2,
-      "brand": "My company 2",
-      "title1": "first title",
-      "description1": "first description",
-      "title2": "second title",
-      "description2": "second desc",
-      "title3": "third title",
-      "description3": "third desc"
-    },
-    {
-      "id": 3,
-      "brand": "My company 2",
-      "title1": "first title",
-      "description1": "first description",
-      "title2": "second title",
-      "description2": "second desc",
-      "title3": "third title",
-      "description3": "third desc"
-    }
-  ]
-}
+[
+  {
+    "id": 1,
+    "brand": "My company",
+    "title1": "Fully Responsive Design",
+    "description1": "When you use a theme created with Bootstrap, you know that the theme will look great on any device, whether it's a phone, tablet, or desktop the page will behave responsively!",
+    "title2": "Updated For Bootstrap 5",
+    "description2": "Newly improved, and full of great utility classNamees, Bootstrap 5 is leading the way in mobile responsive web development! All of the themes are now using Bootstrap 5!",
+    "title3": "Easy to Use & Customize",
+    "description3": "Landing Page is just HTML and CSS with a splash of SCSS for users who demand some deeper customization options. Out of the box, just add your content and images, and your new landing page will be ready to go!"
+  },
+  {
+    "id": 2,
+    "brand": "My company 2",
+    "title1": "first title",
+    "description1": "first description",
+    "title2": "second title",
+    "description2": "second desc",
+    "title3": "third title",
+    "description3": "third desc"
+  },
+  {
+    "id": 3,
+    "brand": "My company 2",
+    "title1": "first title",
+    "description1": "first description",
+    "title2": "second title",
+    "description2": "second desc",
+    "title3": "third title",
+    "description3": "third desc"
+  },
+  {
+    "id": 4,
+    "brand": "My company 2",
+    "title1": "first title",
+    "description1": "first description",
+    "title2": "second title",
+    "description2": "second desc",
+    "title3": "third title",
+    "description3": "third desc"
+  }
+]
