@@ -37,9 +37,16 @@ app.get('/:id', (req, res) => {
         const db = JSON.parse(data);
 
         const item = db.find((item) => item.id === parseInt(req.params.id));
+        
         if (!item) {
             return res.status(404).send({ message: 'Item not found' });
         }
+
+        
+        item.image1 = `${BASE_URL}/uploads/${item.image1}`;
+        item.image2 = `${BASE_URL}/uploads/${item.image2}`;
+        item.image3 = `${BASE_URL}/uploads/${item.image3}`;
+        item.hero = `${BASE_URL}/uploads/${item.hero}`;
 
 
 
