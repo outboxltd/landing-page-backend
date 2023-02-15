@@ -106,7 +106,12 @@ app.post('/', upload.fields([
     });
 });
 
-app.put('/:id', (req, res) => {
+app.put('/:id', upload.fields([
+    { name: 'hero', maxCount: 1 },
+    { name: 'image1', maxCount: 1 },
+    { name: 'image2', maxCount: 1 },
+    { name: 'image3', maxCount: 1 }
+]), (req, res) => {
     fs.readFile(dbPath, (err, data) => {
         if (err) {
             res.status(500).send({ message: 'Failed to read database.' });
@@ -116,7 +121,9 @@ app.put('/:id', (req, res) => {
             if (itemIndex === -1) {
                 res.status(404).send({ message: 'Item not found.' });
             } else {
+                
                 const updatedItem = { ...db[itemIndex], ...req.body };
+                console.log(req.body);
                 db[itemIndex] = updatedItem;
                 fs.writeFile(dbPath, JSON.stringify(db), (err) => {
                     if (err) {
