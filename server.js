@@ -16,7 +16,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 
-const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://landing-page-backend.onrender.com/' : 'http://localhost:8000';
+const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://landing-page-backend.onrender.com' : 'http://localhost:8000';
 
 app.get('/', (req, res) => {
     fs.readFile(dbPath, (err, data) => {
