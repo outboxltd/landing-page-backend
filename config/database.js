@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
+require('dotenv').config()
 
-const db = new Sequelize('landingPageDB', 'root', 'password', {
+const db = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_password, {
     host: '127.0.0.1',
     dialect: 'mysql'
 });
