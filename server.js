@@ -8,7 +8,8 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 8000;
 const dbPath = './db.json';
-// const Sequelize = require('sequelize');
+const { db, connectDB } = require('./config/database.js');
+connectDB();
 const LandingPage = require("./models/companyModel.js")
 
 
@@ -17,19 +18,6 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 
-
-// const db = new Sequelize('landingPageDB', 'root', 'password', {
-//     host: '127.0.0.1',
-//     dialect: 'mysql'
-// });
-
-
-// try {
-//     db.authenticate();
-//     console.log('Connection has been established successfully.');
-// } catch (error) {
-//     console.error('Unable to connect to the database:', error);
-// }
 
 
 
