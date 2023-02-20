@@ -9,7 +9,7 @@ const app = express();
 const port = process.env.PORT || 8000;
 const dbPath = './db.json';
 const { db, connectDB } = require('./config/database.js');
-connectDB();
+// connectDB();
 const LandingPage = require("./models/companyModel.js")
 
 
@@ -111,6 +111,7 @@ app.post('/', upload.fields([
             fs.renameSync(`./uploads/${file.filename}`, `./uploads/${filename}`);
         }
 
+        
         res.status(201).json(createdCompany);
     } catch (error) {
         console.error(error);
@@ -174,7 +175,7 @@ app.delete('/:id', async (req, res) => {
         }
 
         const deletedItem = { ...landingPage.toJSON() };
-        console.log(deletedItem);
+
         // Delete the images from the file system
         if (deletedItem.hero) {
             fs.unlink(`./uploads/${deletedItem.id}-${deletedItem.hero.toString()}`, (err) => {

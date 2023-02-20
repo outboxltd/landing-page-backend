@@ -8,7 +8,7 @@ const storageEngine = multer.diskStorage({
         const fieldName = file.fieldname;
         const prefix = (fieldName === 'hero') ? 'hero' : `image${fieldName.slice(-1)}`
         const extension = file.originalname.split('.').pop();
-        const filename = `${companyId}-${prefix}.${extension}`.replace(/\s+/g, '-');
+        const filename = companyId?`${companyId}-${prefix}.${extension}`.replace(/\s+/g, '-'):`${prefix}.${extension}`.replace(/\s+/g, '-');
         cb(null, filename);
     }
 });
