@@ -4,11 +4,12 @@ const path = require('path');
 const storageEngine = multer.diskStorage({
     destination: "./uploads",
     filename: (req, file, cb) => {
+        const companyId = req.params.id;
         const fieldName = file.fieldname;
         const prefix = (fieldName === 'hero') ? 'hero' : `image${fieldName.slice(-1)}`
         const extension = file.originalname.split('.').pop();
-        const filename = `${req.body.brand}-${prefix}.${extension}`.replace(/\s+/g, '-');
-        cb(null,filename);
+        const filename = `${companyId}-${prefix}.${extension}`.replace(/\s+/g, '-');
+        cb(null, filename);
     }
 });
 
