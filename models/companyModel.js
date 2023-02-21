@@ -24,46 +24,114 @@ const LandingPage = db.define('LandingPage', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    mainTitle: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    subTitle: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    isEmailAvailableInForm: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+    },
+    isNameAvailableInForm: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+    },
+    isPhoneAvailableInForm: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+    },
+    icon1:{
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    icon2:{
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    icon3:{
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    middleText1: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    middleText2: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    middleText3: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
     title1: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     description1: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: true
     },
     title2: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     description2: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: true
     },
     title3: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     description3: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: true
     },
     hero: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     image1: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     image2: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     image3: {
         type: DataTypes.STRING,
-        allowNull: false
-    }
+        allowNull: true
+    },
+    testimonialText1:{
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    testimonialImg1:{
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    testimonialText2:{
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    testimonialImg2:{
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    testimonialText3:{
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    testimonialImg3:{
+        type: DataTypes.STRING,
+        allowNull: true
+    },
 });
 
 LandingPage.sync();
