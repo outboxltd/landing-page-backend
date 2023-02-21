@@ -95,13 +95,21 @@ app.post('/', upload.fields([
 
         // update the filenames with the id of the new company
         const id = createdCompany.id;
-        const filesToUpdate = ['hero', 'image1', 'image2', 'image3'];
+        const filesToUpdate = ['hero', 'image1', 'image2', 'image3', 'testimonialImg1', 'testimonialImg2', 'testimonialImg3'];
         for (const fieldName of filesToUpdate) {
             const file = req.files[fieldName][0];
-            const prefix = (fieldName === 'hero') ? 'hero' : `image${fieldName.slice(-1)}`
+            let prefix = '';
+            if (fieldName === 'hero') {
+                prefix = 'hero';
+            } else if (fieldName.startsWith('image')) {
+                prefix = `image${fieldName.slice(-1)}`;
+            } else if (fieldName.startsWith('testimonialImg')) {
+                prefix = `testimonialImg${fieldName.slice(-1)}`;
+            }
             const extension = file.originalname.split('.').pop();
             const filename = `${id}-${prefix}.${extension}`.replace(/\s+/g, '-');
             fs.renameSync(`./uploads/${file.filename}`, `./uploads/${filename}`);
+            newCompany[fieldName] = filename; // update the filename in newCompany
         }
 
         
