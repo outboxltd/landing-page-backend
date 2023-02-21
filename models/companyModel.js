@@ -52,11 +52,7 @@ const LandingPage = db.define('LandingPage', {
         type: DataTypes.TEXT,
         allowNull: true
     },
-    icon2:{
-        type: DataTypes.TEXT,
-        allowNull: true
-    },
-    icon3:{
+    middleTitle1:{
         type: DataTypes.TEXT,
         allowNull: true
     },
@@ -64,10 +60,27 @@ const LandingPage = db.define('LandingPage', {
         type: DataTypes.TEXT,
         allowNull: true
     },
+    icon2:{
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    middleTitle2:{
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
     middleText2: {
         type: DataTypes.TEXT,
         allowNull: true
     },
+    icon3:{
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    middleTitle3:{
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+
     middleText3: {
         type: DataTypes.TEXT,
         allowNull: true
@@ -112,6 +125,10 @@ const LandingPage = db.define('LandingPage', {
         type: DataTypes.STRING,
         allowNull: true
     },
+    testimonialName1:{
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
     testimonialText1:{
         type: DataTypes.TEXT,
         allowNull: true
@@ -120,12 +137,20 @@ const LandingPage = db.define('LandingPage', {
         type: DataTypes.STRING,
         allowNull: true
     },
+    testimonialName2:{
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
     testimonialText2:{
         type: DataTypes.TEXT,
         allowNull: true
     },
     testimonialImg2:{
         type: DataTypes.STRING,
+        allowNull: true
+    },
+    testimonialName3:{
+        type: DataTypes.TEXT,
         allowNull: true
     },
     testimonialText3:{
