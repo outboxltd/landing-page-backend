@@ -238,6 +238,21 @@ app.delete('/:id', async (req, res) => {
                 if (err) console.error(err);
             });
         }
+        if (deletedItem.testimonialImg1) {
+            fs.unlink(`./uploads/${deletedItem.id}-testimonialImg1.jpg`, (err) => {
+                if (err) console.error(err);
+            });
+        }
+        if (deletedItem.testimonialImg2) {
+            fs.unlink(`./uploads/${deletedItem.id}-testimonialImg2.jpg`, (err) => {
+                if (err) console.error(err);
+            });
+        }
+        if (deletedItem.testimonialImg3) {
+            fs.unlink(`./uploads/${deletedItem.id}-testimonialImg3.jpg`, (err) => {
+                if (err) console.error(err);
+            });
+        }
 
         await landingPage.destroy();
 
