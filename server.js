@@ -40,17 +40,7 @@ app.get('/:id', (req, res) => {
                 return res.status(404).send({ message: 'Item not found' });
             }
 
-            const imagePath = (imageName) => `${BASE_URL}/uploads/${item.id}-${imageName}`;
-
-            const response = {
-                ...item.toJSON(),
-                hero: imagePath('hero.jpg'),
-                image1: imagePath('image1.jpg'),
-                image2: imagePath('image2.jpg'),
-                image3: imagePath('image3.jpg')
-            };
-
-            res.send(response);
+            res.send(item);
         })
         .catch((err) => {
             console.error('Unable to fetch landing page:', err);
@@ -60,11 +50,8 @@ app.get('/:id', (req, res) => {
 
 
 app.get('/uploads/:imageName', function (req, res) {
-    // const item = db.find((item) => item.id === parseInt(req.params.id));
     var image = req.params['imageName'];
-    // if(item.findIndex(image)<0){
-    //     res.end(403)
-    // }
+
     res.header('Content-Type', "image/jpg");
     fs.readFile("uploads/" + image, function (err, data) {
         if (err) {
@@ -112,7 +99,19 @@ app.post('/', upload.fields([
         }
 
         
-        res.status(201).json(createdCompany);
+        const imagePath = (imageName) => `${BASE_URL}/uploads/${id}-${imageName}`;
+
+        updatedCompany = {
+            ...createdCompany,
+            hero: imagePath('hero.jpg'),
+            image1: imagePath('image1.jpg'),
+            image2: imagePath('image2.jpg'),
+            image3: imagePath('image3.jpg')
+        };
+        
+        await createdCompany.update(updatedCompany);
+
+        res.status(201).send(createdCompany);
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: 'Error creating item in database' });
@@ -152,10 +151,13 @@ app.put('/:id', upload.fields([
         await landingPage.update(updatedFields);
 
         const updatedLandingPage = await LandingPage.findByPk(req.params.id);
-        updatedLandingPage.hero = `${BASE_URL}/uploads/${updatedLandingPage.hero}`;
-        updatedLandingPage.image1 = `${BASE_URL}/uploads/${updatedLandingPage.image1}`;
-        updatedLandingPage.image2 = `${BASE_URL}/uploads/${updatedLandingPage.image2}`;
-        updatedLandingPage.image3 = `${BASE_URL}/uploads/${updatedLandingPage.image3}`;
+        
+        const imagePath = (imageName) => `${BASE_URL}/uploads/${updatedLandingPage.id}-${imageName}`;
+        
+        updatedLandingPage.hero = updatedLandingPage.hero ? imagePath('hero.jpg') : null;
+        updatedLandingPage.image1 = updatedLandingPage.image1 ? imagePath('image1.jpg') : null;
+        updatedLandingPage.image2 = updatedLandingPage.image2 ? imagePath('image2.jpg') : null;
+        updatedLandingPage.image3 = updatedLandingPage.image3 ? imagePath('image3.jpg') : null;
 
         res.send(updatedLandingPage);
 
@@ -164,6 +166,9 @@ app.put('/:id', upload.fields([
         res.status(500).send({ message: 'Failed to update landing page.' });
     }
 });
+
+
+
 
 
 app.delete('/:id', async (req, res) => {
@@ -178,22 +183,22 @@ app.delete('/:id', async (req, res) => {
 
         // Delete the images from the file system
         if (deletedItem.hero) {
-            fs.unlink(`./uploads/${deletedItem.id}-${deletedItem.hero.toString()}`, (err) => {
+            fs.unlink(`./uploads/${deletedItem.id}-hero.jpg`, (err) => {
                 if (err) console.error(err);
             });
         }
         if (deletedItem.image1) {
-            fs.unlink(`./uploads/${deletedItem.id}-${deletedItem.image1.toString()}`, (err) => {
+            fs.unlink(`./uploads/${deletedItem.id}-image1.jpg`, (err) => {
                 if (err) console.error(err);
             });
         }
         if (deletedItem.image2) {
-            fs.unlink(`./uploads/${deletedItem.id}-${deletedItem.image2.toString()}`, (err) => {
+            fs.unlink(`./uploads/${deletedItem.id}-image2.jpg`, (err) => {
                 if (err) console.error(err);
             });
         }
         if (deletedItem.image3) {
-            fs.unlink(`./uploads/${deletedItem.id}-${deletedItem.image3.toString()}`, (err) => {
+            fs.unlink(`./uploads/${deletedItem.id}-image3.jpg`, (err) => {
                 if (err) console.error(err);
             });
         }
