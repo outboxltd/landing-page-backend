@@ -102,8 +102,9 @@ app.post('/', upload.fields([
             if (fieldName === 'hero') {
                 prefix = 'hero';
             } else if (fieldName.startsWith('image')) {
+
                 prefix = `image${fieldName.slice(-1)}`;
-            } else if (fieldName.startsWith('testimonialImg')) {
+            } else  {
                 prefix = `testimonialImg${fieldName.slice(-1)}`;
             }
             const extension = file.originalname.split('.').pop();
@@ -155,41 +156,45 @@ app.put('/:id', upload.fields([
 
         if (req.files) {
             if (req.files['hero']) {
-                updatedFields.hero = req.files['hero'][0].filename;
+                const heroFileName = req.files['hero'][0].filename;
+                const heroImageUrl = `${BASE_URL}/uploads/${heroFileName}`;
+                updatedFields.hero = heroImageUrl;
             }
             if (req.files['image1']) {
-                updatedFields.image1 = req.files['image1'][0].filename;
+                const image1FileName = req.files['image1'][0].filename;
+                const image1ImageUrl = `${BASE_URL}/uploads/${image1FileName}`;
+                updatedFields.image1 = image1ImageUrl;
             }
             if (req.files['image2']) {
-                updatedFields.image2 = req.files['image2'][0].filename;
+                const image2FileName = req.files['image2'][0].filename;
+                const image2ImageUrl = `${BASE_URL}/uploads/${image2FileName}`;
+                updatedFields.image2 = image2ImageUrl;
             }
             if (req.files['image3']) {
-                updatedFields.image3 = req.files['image3'][0].filename;
+                const image3FileName = req.files['image3'][0].filename;
+                const image3ImageUrl = `${BASE_URL}/uploads/${image3FileName}`;
+                updatedFields.image3 = image3ImageUrl;
             }
             if (req.files['testimonialImg1']) {
-                updatedFields.testimonialImg1 = req.files['testimonialImg1'][0].filename;
+                const testimonialImg1FileName = req.files['testimonialImg1'][0].filename;
+                const testimonialImg1ImageUrl = `${BASE_URL}/uploads/${testimonialImg1FileName}`;
+                updatedFields.testimonialImg1 = testimonialImg1ImageUrl;
             }
             if (req.files['testimonialImg2']) {
-                updatedFields.testimonialImg2 = req.files['testimonialImg2'][0].filename;
+                const testimonialImg2FileName = req.files['testimonialImg2'][0].filename;
+                const testimonialImg2ImageUrl = `${BASE_URL}/uploads/${testimonialImg2FileName}`;
+                updatedFields.testimonialImg2 = testimonialImg2ImageUrl;
             }
             if (req.files['testimonialImg3']) {
-                updatedFields.testimonialImg3 = req.files['testimonialImg3'][0].filename;
+                const testimonialImg3FileName = req.files['testimonialImg3'][0].filename;
+                const testimonialImg3ImageUrl = `${BASE_URL}/uploads/${testimonialImg3FileName}`;
+                updatedFields.testimonialImg3 = testimonialImg3ImageUrl;
             }
         }
 
         await landingPage.update(updatedFields);
 
         const updatedLandingPage = await LandingPage.findByPk(req.params.id);
-
-        const imagePath = (imageName) => `${BASE_URL}/uploads/${updatedLandingPage.id}-${imageName}`;
-
-        updatedLandingPage.hero = updatedLandingPage.hero ? imagePath('hero.jpg') : null;
-        updatedLandingPage.image1 = updatedLandingPage.image1 ? imagePath('image1.jpg') : null;
-        updatedLandingPage.image2 = updatedLandingPage.image2 ? imagePath('image2.jpg') : null;
-        updatedLandingPage.image3 = updatedLandingPage.image3 ? imagePath('image3.jpg') : null;
-        updatedLandingPage.testimonialImg1 = updatedLandingPage.testimonialImg1 ? imagePath('testimonialImg1.jpg') : null;
-        updatedLandingPage.testimonialImg2 = updatedLandingPage.testimonialImg2 ? imagePath('testimonialImg2.jpg') : null;
-        updatedLandingPage.testimonialImg3 = updatedLandingPage.testimonialImg3 ? imagePath('testimonialImg3.jpg') : null;
 
         res.send(updatedLandingPage);
 
@@ -198,7 +203,6 @@ app.put('/:id', upload.fields([
         res.status(500).send({ message: 'Failed to update landing page.' });
     }
 });
-
 
 
 
