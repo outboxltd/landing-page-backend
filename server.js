@@ -67,7 +67,10 @@ app.post('/', upload.fields([
     { name: 'hero', maxCount: 1 },
     { name: 'image1', maxCount: 1 },
     { name: 'image2', maxCount: 1 },
-    { name: 'image3', maxCount: 1 }
+    { name: 'image3', maxCount: 1 },
+    { name: 'testimonialImg1', maxCount: 1 },
+    { name: 'testimonialImg2', maxCount: 1 },
+    { name: 'testimonialImg3', maxCount: 1 },
 ]), async (req, res) => {
     try {
         const newCompany = {
@@ -76,6 +79,9 @@ app.post('/', upload.fields([
             image1: req.files.image1[0].filename,
             image2: req.files.image2[0].filename,
             image3: req.files.image3[0].filename,
+            testimonialImg1: req.files.testimonialImg1[0].filename,
+            testimonialImg2: req.files.testimonialImg2[0].filename,
+            testimonialImg3: req.files.testimonialImg3[0].filename,
             ...req.body
         };
 
@@ -106,7 +112,10 @@ app.post('/', upload.fields([
             hero: imagePath('hero.jpg'),
             image1: imagePath('image1.jpg'),
             image2: imagePath('image2.jpg'),
-            image3: imagePath('image3.jpg')
+            image3: imagePath('image3.jpg'),
+            testimonialImg1: imagePath('testimonialImg1.jpg'),
+            testimonialImg2: imagePath('testimonialImg2.jpg'),
+            testimonialImg3: imagePath('testimonialImg3.jpg')
         };
         
         await createdCompany.update(updatedCompany);
@@ -122,7 +131,10 @@ app.put('/:id', upload.fields([
     { name: 'hero', maxCount: 1 },
     { name: 'image1', maxCount: 1 },
     { name: 'image2', maxCount: 1 },
-    { name: 'image3', maxCount: 1 }
+    { name: 'image3', maxCount: 1 },
+    { name: 'testimonialImg1', maxCount: 1 },
+    { name: 'testimonialImg2', maxCount: 1 },
+    { name: 'testimonialImg3', maxCount: 1 }
 ]), async (req, res) => {
     try {
         const landingPage = await LandingPage.findByPk(req.params.id);
@@ -146,18 +158,30 @@ app.put('/:id', upload.fields([
             if (req.files['image3']) {
                 updatedFields.image3 = req.files['image3'][0].filename;
             }
+            if (req.files['testimonialImg1']) {
+                updatedFields.testimonialImg1 = req.files['testimonialImg1'][0].filename;
+            }
+            if (req.files['testimonialImg2']) {
+                updatedFields.testimonialImg2 = req.files['testimonialImg2'][0].filename;
+            }
+            if (req.files['testimonialImg3']) {
+                updatedFields.testimonialImg3 = req.files['testimonialImg3'][0].filename;
+            }
         }
 
         await landingPage.update(updatedFields);
 
         const updatedLandingPage = await LandingPage.findByPk(req.params.id);
-        
+
         const imagePath = (imageName) => `${BASE_URL}/uploads/${updatedLandingPage.id}-${imageName}`;
-        
+
         updatedLandingPage.hero = updatedLandingPage.hero ? imagePath('hero.jpg') : null;
         updatedLandingPage.image1 = updatedLandingPage.image1 ? imagePath('image1.jpg') : null;
         updatedLandingPage.image2 = updatedLandingPage.image2 ? imagePath('image2.jpg') : null;
         updatedLandingPage.image3 = updatedLandingPage.image3 ? imagePath('image3.jpg') : null;
+        updatedLandingPage.testimonialImg1 = updatedLandingPage.testimonialImg1 ? imagePath('testimonialImg1.jpg') : null;
+        updatedLandingPage.testimonialImg2 = updatedLandingPage.testimonialImg2 ? imagePath('testimonialImg2.jpg') : null;
+        updatedLandingPage.testimonialImg3 = updatedLandingPage.testimonialImg3 ? imagePath('testimonialImg3.jpg') : null;
 
         res.send(updatedLandingPage);
 

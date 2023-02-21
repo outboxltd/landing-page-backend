@@ -24,6 +24,10 @@ const LandingPage = db.define('LandingPage', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    isRTL: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+    },
     mainTitle: {
         type: DataTypes.TEXT,
         allowNull: false
