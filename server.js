@@ -248,37 +248,37 @@ app.delete('/:id', async (req, res) => {
 
         // Delete the images from the file system
         if (deletedItem.hero) {
-            fs.unlink(`./uploads/${deletedItem.id}-hero.jpg`, (err) => {
+            fs.unlink(`./uploads/${deletedItem.id}-hero.webp`, (err) => {
                 if (err) console.error(err);
             });
         }
         if (deletedItem.image1) {
-            fs.unlink(`./uploads/${deletedItem.id}-image1.jpg`, (err) => {
+            fs.unlink(`./uploads/${deletedItem.id}-image1.webp`, (err) => {
                 if (err) console.error(err);
             });
         }
         if (deletedItem.image2) {
-            fs.unlink(`./uploads/${deletedItem.id}-image2.jpg`, (err) => {
+            fs.unlink(`./uploads/${deletedItem.id}-image2.webp`, (err) => {
                 if (err) console.error(err);
             });
         }
         if (deletedItem.image3) {
-            fs.unlink(`./uploads/${deletedItem.id}-image3.jpg`, (err) => {
+            fs.unlink(`./uploads/${deletedItem.id}-image3.webp`, (err) => {
                 if (err) console.error(err);
             });
         }
         if (deletedItem.testimonialImg1) {
-            fs.unlink(`./uploads/${deletedItem.id}-testimonialImg1.jpg`, (err) => {
+            fs.unlink(`./uploads/${deletedItem.id}-testimonialImg1.webp`, (err) => {
                 if (err) console.error(err);
             });
         }
         if (deletedItem.testimonialImg2) {
-            fs.unlink(`./uploads/${deletedItem.id}-testimonialImg2.jpg`, (err) => {
+            fs.unlink(`./uploads/${deletedItem.id}-testimonialImg2.webp`, (err) => {
                 if (err) console.error(err);
             });
         }
         if (deletedItem.testimonialImg3) {
-            fs.unlink(`./uploads/${deletedItem.id}-testimonialImg3.jpg`, (err) => {
+            fs.unlink(`./uploads/${deletedItem.id}-testimonialImg3.webp`, (err) => {
                 if (err) console.error(err);
             });
         }
