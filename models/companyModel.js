@@ -28,6 +28,14 @@ const LandingPage = db.define('LandingPage', {
         type: DataTypes.BOOLEAN,
         allowNull: false
     },
+    script:{
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    googleAnalyticsCode:{
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
     topButtonText:{
         type: DataTypes.STRING,
         allowNull: true
@@ -170,6 +178,22 @@ const LandingPage = db.define('LandingPage', {
         allowNull: true
     },
     testimonialImg3:{
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    bottomFormHeader:{
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    facebookAddress:{
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    twitterAddress:{
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    instagramAddress:{
         type: DataTypes.STRING,
         allowNull: true
     },
