@@ -197,6 +197,10 @@ const LandingPage = db.define('LandingPage', {
         type: DataTypes.TEXT,
         allowNull: true
     },
+    testimonialImg3: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     testimonialText3: {
         type: DataTypes.TEXT,
         allowNull: true
