@@ -2,7 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
-const upload = require('./upload.js')
+const {upload,compressImage} = require('./upload.js')
 const path = require('path');
 
 const app = express();
@@ -63,7 +63,7 @@ app.get('/uploads/:imageName', function (req, res) {
 
 
 
-app.post('/', upload.fields([
+app.post('/',upload.fields([
     { name: 'hero', maxCount: 1 },
     { name: 'image1', maxCount: 1 },
     { name: 'image2', maxCount: 1 },
@@ -108,9 +108,10 @@ app.post('/', upload.fields([
                 prefix = `testimonialImg${fieldName.slice(-1)}`;
             }
             const extension = file.originalname.split('.').pop();
-            const filename = `${id}-${prefix}.${extension}`.replace(/\s+/g, '-');
+            const filename = `${id}-${prefix}.webp`.replace(/\s+/g, '-');
             fs.renameSync(`./uploads/${file.filename}`, `./uploads/${filename}`);
             newCompany[fieldName] = filename; // update the filename in newCompany
+            compressImage(`./uploads/${filename}`)
         }
 
         
@@ -118,13 +119,13 @@ app.post('/', upload.fields([
 
         updatedCompany = {
             ...createdCompany,
-            hero: imagePath('hero.jpg'),
-            image1: imagePath('image1.jpg'),
-            image2: imagePath('image2.jpg'),
-            image3: imagePath('image3.jpg'),
-            testimonialImg1: imagePath('testimonialImg1.jpg'),
-            testimonialImg2: imagePath('testimonialImg2.jpg'),
-            testimonialImg3: imagePath('testimonialImg3.jpg')
+            hero: imagePath('hero.webp'),
+            image1: imagePath('image1.webp'),
+            image2: imagePath('image2.webp'),
+            image3: imagePath('image3.webp'),
+            testimonialImg1: imagePath('testimonialImg1.webp'),
+            testimonialImg2: imagePath('testimonialImg2.webp'),
+            testimonialImg3: imagePath('testimonialImg3.webp')
         };
         
         await createdCompany.update(updatedCompany);
@@ -136,7 +137,7 @@ app.post('/', upload.fields([
     }
 });
 
-app.put('/:id', upload.fields([
+app.put('/:id',upload.fields([
     { name: 'hero', maxCount: 1 },
     { name: 'image1', maxCount: 1 },
     { name: 'image2', maxCount: 1 },
@@ -157,38 +158,66 @@ app.put('/:id', upload.fields([
         if (req.files) {
             if (req.files['hero']) {
                 const heroFileName = req.files['hero'][0].filename;
-                const heroImageUrl = `${BASE_URL}/uploads/${heroFileName}`;
+                await compressImage(`./uploads/${heroFileName}`)
+                const heroImageUrl = `${BASE_URL}/uploads/${heroFileName}`.replace('.jpg','.webp');
                 updatedFields.hero = heroImageUrl;
+                fs.unlink(`./uploads/${heroFileName}`, (err) => {
+                    if (err) console.error(err);
+                });
             }
             if (req.files['image1']) {
                 const image1FileName = req.files['image1'][0].filename;
-                const image1ImageUrl = `${BASE_URL}/uploads/${image1FileName}`;
+                await compressImage(`./uploads/${image1FileName}`)
+                const image1ImageUrl = `${BASE_URL}/uploads/${image1FileName}`.replace('.jpg','.webp');
                 updatedFields.image1 = image1ImageUrl;
+                fs.unlink(`./uploads/${image1FileName}`, (err) => {
+                    if (err) console.error(err);
+                });
             }
             if (req.files['image2']) {
                 const image2FileName = req.files['image2'][0].filename;
-                const image2ImageUrl = `${BASE_URL}/uploads/${image2FileName}`;
+                await compressImage(`./uploads/${image2FileName }`)
+                const image2ImageUrl = `${BASE_URL}/uploads/${image2FileName}`.replace('.jpg','.webp');
                 updatedFields.image2 = image2ImageUrl;
+                fs.unlink(`./uploads/${image2FileName}`, (err) => {
+                    if (err) console.error(err);
+                });
             }
             if (req.files['image3']) {
                 const image3FileName = req.files['image3'][0].filename;
-                const image3ImageUrl = `${BASE_URL}/uploads/${image3FileName}`;
+                await compressImage(`./uploads/${image3FileName}`);
+                const image3ImageUrl = `${BASE_URL}/uploads/${image3FileName}`.replace('.jpg','.webp');
                 updatedFields.image3 = image3ImageUrl;
+                fs.unlink(`./uploads/${image3FileName}`, (err) => {
+                    if (err) console.error(err);
+                });
             }
             if (req.files['testimonialImg1']) {
                 const testimonialImg1FileName = req.files['testimonialImg1'][0].filename;
-                const testimonialImg1ImageUrl = `${BASE_URL}/uploads/${testimonialImg1FileName}`;
+                await compressImage(`./uploads/${testimonialImg1FileName }`);
+                const testimonialImg1ImageUrl = `${BASE_URL}/uploads/${testimonialImg1FileName}`.replace('.jpg','.webp');
                 updatedFields.testimonialImg1 = testimonialImg1ImageUrl;
+                fs.unlink(`./uploads/${testimonialImg1FileName}`, (err) => {
+                    if (err) console.error(err);
+                });
             }
             if (req.files['testimonialImg2']) {
                 const testimonialImg2FileName = req.files['testimonialImg2'][0].filename;
-                const testimonialImg2ImageUrl = `${BASE_URL}/uploads/${testimonialImg2FileName}`;
+                await compressImage(`./uploads/${testimonialImg2FileName}`)
+                const testimonialImg2ImageUrl = `${BASE_URL}/uploads/${testimonialImg2FileName}`.replace('.jpg','.webp');
                 updatedFields.testimonialImg2 = testimonialImg2ImageUrl;
+                fs.unlink(`./uploads/${testimonialImg2FileName}`, (err) => {
+                    if (err) console.error(err);
+                });
             }
             if (req.files['testimonialImg3']) {
                 const testimonialImg3FileName = req.files['testimonialImg3'][0].filename;
-                const testimonialImg3ImageUrl = `${BASE_URL}/uploads/${testimonialImg3FileName}`;
+                await compressImage(`./uploads/${testimonialImg3FileName}`);
+                const testimonialImg3ImageUrl = `${BASE_URL}/uploads/${testimonialImg3FileName}`.replace('.jpg','.webp');
                 updatedFields.testimonialImg3 = testimonialImg3ImageUrl;
+                fs.unlink(`./uploads/${testimonialImg3FileName}`, (err) => {
+                    if (err) console.error(err);
+                });
             }
         }
 

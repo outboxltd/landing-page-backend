@@ -1,5 +1,12 @@
 const multer = require('multer');
 const path = require('path');
+const tinify = require("tinify");
+require('dotenv').config()
+
+tinify.key = process.env.TINIFY_KEY;
+
+
+
 
 const storageEngine = multer.diskStorage({
     destination: "./uploads",
@@ -27,4 +34,15 @@ const upload = multer({
     }
 });
 
-module.exports = upload;
+const compressImage = async (filePath) => {
+    try {
+        const source = tinify.fromFile(filePath);
+        const converted = source.convert({ type: ["image/webp", "image/jpeg"] });
+        await converted.toFile(filePath.replace('.jpg', '.webp'));
+    } catch (error) {
+        console.error(error);
+        throw new Error('Error compressing image');
+    }
+};
+
+module.exports = { upload, compressImage };

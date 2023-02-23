@@ -28,6 +28,18 @@ const LandingPage = db.define('LandingPage', {
         type: DataTypes.BOOLEAN,
         allowNull: false
     },
+    topButtonText:{
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    topButtonLink:{
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    signupButtonText:{
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     mainTitle: {
         type: DataTypes.TEXT,
         allowNull: false
