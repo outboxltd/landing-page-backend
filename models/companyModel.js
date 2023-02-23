@@ -5,18 +5,18 @@ const { DataTypes } = Sequelize;
 const db = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
     host: process.env.DB_HOST,
     dialect: 'mysql',
-    
+
 });
 const connectDB = async () => {
     try {
-      await db.authenticate();
-      console.log('Connection has been established successfully.');
+        await db.authenticate();
+        console.log('Connection has been established successfully.');
     } catch (error) {
-      console.error('Unable to connect to the database:', error);
+        console.error('Unable to connect to the database:', error);
     }
-  };
+};
 
-  connectDB()
+connectDB()
 
 
 const LandingPage = db.define('LandingPage', {
@@ -28,23 +28,23 @@ const LandingPage = db.define('LandingPage', {
         type: DataTypes.BOOLEAN,
         allowNull: false
     },
-    script:{
+    script: {
         type: DataTypes.TEXT,
         allowNull: true
     },
-    googleAnalyticsCode:{
+    googleAnalyticsCode: {
         type: DataTypes.TEXT,
         allowNull: true
     },
-    topButtonText:{
+    topButtonText: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    topButtonLink:{
+    topButtonLink: {
         type: DataTypes.TEXT,
         allowNull: true
     },
-    signupButtonText:{
+    signupButtonText: {
         type: DataTypes.STRING,
         allowNull: true
     },
@@ -68,11 +68,11 @@ const LandingPage = db.define('LandingPage', {
         type: DataTypes.BOOLEAN,
         allowNull: false
     },
-    icon1:{
+    icon1: {
         type: DataTypes.TEXT,
         allowNull: true
     },
-    middleTitle1:{
+    middleTitle1: {
         type: DataTypes.TEXT,
         allowNull: true
     },
@@ -80,11 +80,11 @@ const LandingPage = db.define('LandingPage', {
         type: DataTypes.TEXT,
         allowNull: true
     },
-    icon2:{
+    icon2: {
         type: DataTypes.TEXT,
         allowNull: true
     },
-    middleTitle2:{
+    middleTitle2: {
         type: DataTypes.TEXT,
         allowNull: true
     },
@@ -92,11 +92,11 @@ const LandingPage = db.define('LandingPage', {
         type: DataTypes.TEXT,
         allowNull: true
     },
-    icon3:{
+    icon3: {
         type: DataTypes.TEXT,
         allowNull: true
     },
-    middleTitle3:{
+    middleTitle3: {
         type: DataTypes.TEXT,
         allowNull: true
     },
@@ -133,7 +133,15 @@ const LandingPage = db.define('LandingPage', {
         type: DataTypes.STRING,
         allowNull: true
     },
+    heroAlt: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     image1: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    image1Alt: {
         type: DataTypes.STRING,
         allowNull: true
     },
@@ -141,63 +149,95 @@ const LandingPage = db.define('LandingPage', {
         type: DataTypes.STRING,
         allowNull: true
     },
+    image2Alt: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     image3: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    testimonialName1:{
-        type: DataTypes.TEXT,
-        allowNull: true
-    },
-    testimonialText1:{
-        type: DataTypes.TEXT,
-        allowNull: true
-    },
-    testimonialImg1:{
+    image3Alt: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    testimonialName2:{
+    testimonialName1: {
         type: DataTypes.TEXT,
         allowNull: true
     },
-    testimonialText2:{
+    testimonialText1: {
         type: DataTypes.TEXT,
         allowNull: true
     },
-    testimonialImg2:{
+    testimonialImg1: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    testimonialName3:{
-        type: DataTypes.TEXT,
-        allowNull: true
-    },
-    testimonialText3:{
-        type: DataTypes.TEXT,
-        allowNull: true
-    },
-    testimonialImg3:{
+    testimonialImg1Alt: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    bottomFormHeader:{
+    testimonialName2: {
         type: DataTypes.TEXT,
         allowNull: true
     },
-    facebookAddress:{
+    testimonialText2: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    testimonialImg2: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    twitterAddress:{
+    testimonialImg2Alt: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    instagramAddress:{
+    testimonialName3: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    testimonialText3: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    testimonialImg3Alt: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    bottomFormHeader: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    aboutAddress: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    contactAddress: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    termsAddress: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    privacyAddress: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    facebookAddress: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    twitterAddress: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    instagramAddress: {
         type: DataTypes.STRING,
         allowNull: true
     },
 });
 
 LandingPage.sync();
-module.exports= LandingPage;
+module.exports = LandingPage;
