@@ -4,7 +4,7 @@ const cors = require('cors');
 const fs = require('fs');
 const { upload, compressImage } = require('./upload.js')
 const path = require('path');
-const bodyParser = require('body-parser');
+
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -12,12 +12,12 @@ const port = process.env.PORT || 8000;
 // const { db, connectDB } = require('./config/database.js');
 // connectDB();
 const LandingPage = require("./models/companyModel.js")
-const FormModel = require("./models/formModel.js")
+// const FormModel = require("./models/formModel.js")
 
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.urlencoded({ extended: true }));
+
 
 
 
