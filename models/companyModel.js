@@ -245,3 +245,4 @@ const LandingPage = db.define('LandingPage', {
 
 LandingPage.sync();
 module.exports = LandingPage;
+
