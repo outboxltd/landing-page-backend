@@ -20,6 +20,7 @@ const storageEngine = multer.diskStorage({
         }
         const extension = file.originalname.split('.').pop();
         const filename = companyId ? `${companyId}-${prefix}.${extension}`.replace(/\s+/g, '-') : `${prefix}.${extension}`.replace(/\s+/g, '-');
+        console.log("got here");
         cb(null, filename);
     }
 });
