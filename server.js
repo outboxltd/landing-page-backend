@@ -56,7 +56,7 @@ app.get('/uploads/:imageName', function (req, res) {
     res.header('Content-Type', "image/jpg");
     fs.readFile("uploads/" + image, function (err, data) {
         if (err) {
-            res.end(404);
+            res.status(404).send('image not found');
         }
         res.send(data)
     });
@@ -174,7 +174,6 @@ app.put('/:id', upload.fields([
         if (!landingPage) {
             return res.status(404).send({ message: 'Item not found.' });
         }
-
         let updatedFields = { ...req.body };
 
         if (req.files) {
