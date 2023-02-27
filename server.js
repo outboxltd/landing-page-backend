@@ -73,6 +73,7 @@ app.post('/', upload.fields([
     { name: 'testimonialImg2', maxCount: 1 },
     { name: 'testimonialImg3', maxCount: 1 },
 ]), async (req, res) => {
+
     try {
         const newCompany = {
             brand: req.body.brand,
