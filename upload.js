@@ -6,7 +6,7 @@ require('dotenv').config()
 tinify.key = process.env.TINIFY_KEY;
 
 const storageEngine = multer.diskStorage({
-    destination: "./uploads",
+    destination: path.join(_dirname,'./uploads'),
     filename: (req, file, cb) => {
         const companyId = req.params.id;
         const fieldName = file.fieldname;
