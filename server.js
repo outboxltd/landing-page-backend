@@ -8,11 +8,9 @@ const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 8000;
-// const dbPath = './db.json';
-// const { db, connectDB } = require('./config/database.js');
-// connectDB();
+
 const LandingPage = require("./models/companyModel.js")
-// const FormModel = require("./models/formModel.js")
+const FormModel = require("./models/formModel.js")
 
 app.use(express.json());
 app.use(cors());
@@ -50,17 +48,7 @@ app.get('/:id', (req, res) => {
 });
 
 
-// app.get('/uploads/:imageName', function (req, res) {
-//     var image = req.params['imageName'];
 
-//     res.header('Content-Type', "image/webp");
-//     fs.readFile("uploads/" + image, function (err, data) {
-//         if (err) {
-//             res.status(404).send('image not found');
-//         }
-//         res.send(data)
-//     });
-// });
 
 app.get(`/uploads/:imageName`, async (req, res) => {
     res.sendFile(path.join(__dirname, `./uploads/${req.params.imageName}`));
@@ -150,7 +138,8 @@ app.post('/form', async (req, res) => {
             name: req.body.name,
             phone: req.body.phone,
             email: req.body.email,
-            companyId: req.body.companyId
+            companyId: req.body.companyId,
+            leadStatus:0
         };
 
         const createdForm = await FormModel.create(newForm);

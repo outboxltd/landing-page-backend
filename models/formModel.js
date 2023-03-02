@@ -20,7 +20,7 @@ const db = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.e
 
 const FormModel = db.define('FormModel', {
     companyId: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
         allowNull: true
     },
     name: {
@@ -33,6 +33,10 @@ const FormModel = db.define('FormModel', {
     },
     phone: {
         type: DataTypes.STRING,
+        allowNull: true
+    },
+    leadStatus:{
+        type: DataTypes.INTEGER,
         allowNull: true
     }
 });
