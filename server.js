@@ -9,7 +9,7 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 8000;
 
-// const admin = require("firebase-admin")
+
 const LandingPage = require("./models/companyModel.js")
 const FormModel = require("./models/formModel.js")
 const User = require("./models/userModel.js")
@@ -17,19 +17,9 @@ app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
-// import * as admin from "firebase-admin";
+
 
 require('dotenv').config();
-
-// admin.initializeApp({
-//     credential: admin.credential.cert({
-//         projectId: process.env.PROJECT_ID,
-//         privateKey: process.env.PRIVATE_KEY?.replace(/\\n/g, '\n'),
-//         clientEmail: process.env.CLIENT_EMAIL,
-//     }),
-//     databaseURL: process.env.DATABASE_URL
-// });
-
 
 
 
@@ -239,7 +229,7 @@ app.put('/:id', upload.fields([
 app.delete('/:id', async (req, res) => {
     try {
         const landingPage = await LandingPage.findByPk(req.params.id);
-
+        const user = await User.findOne({ where: { companyId: req.params.id } });
         if (!landingPage) {
             return res.status(404).send({ message: 'Item not found.' });
         }
@@ -247,7 +237,7 @@ app.delete('/:id', async (req, res) => {
         const deletedItem = { ...landingPage.toJSON() };
 
         // Delete the images from the file system
-        if (deletedItem.hero) {
+        if (deletedItem.hero) { 
             fs.unlink(`./uploads/${deletedItem.id}-hero.webp`, (err) => {
                 if (err) console.error(err);
             });
@@ -284,7 +274,7 @@ app.delete('/:id', async (req, res) => {
         }
 
         await landingPage.destroy();
-
+        await user.destroy();
         res.send(deletedItem);
 
     } catch (err) {
