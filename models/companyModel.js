@@ -240,7 +240,7 @@ const LandingPage = db.define('LandingPage', {
     instagramAddress: {
         type: DataTypes.STRING,
         allowNull: true
-    },
+    }
 });
 
 LandingPage.sync();

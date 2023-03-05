@@ -9,14 +9,26 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 8000;
 
+const admin = require("firebase-admin")
 const LandingPage = require("./models/companyModel.js")
 const FormModel = require("./models/formModel.js")
-
+const User = require("./models/userModel.js")
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
+// import * as admin from "firebase-admin";
 
+require('dotenv').config();
+
+admin.initializeApp({
+    credential: admin.credential.cert({
+        projectId: process.env.PROJECT_ID,
+        privateKey: process.env.PRIVATE_KEY?.replace(/\\n/g, '\n'),
+        clientEmail: process.env.CLIENT_EMAIL,
+    }),
+    databaseURL: process.env.DATABASE_URL
+});
 
 
 
@@ -47,12 +59,29 @@ app.get('/:id', (req, res) => {
         });
 });
 
+app.get('/landingPages/:uid', async (req, res) => {
+    const uid = req.params.uid;
+
+    try {
+        // Find all the user records matching the uid and get their companyId values
+        const userRecords = await User.findAll({ where: { uid: uid } });
+        const companyIds = userRecords.map((record) => record.companyId);
+
+        // Find all the LandingPage records matching each companyId
+        const landingPages = await LandingPage.findAll({ where: { id: companyIds } });
+
+        res.json({ landingPages: landingPages });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
 
 
 
 app.get(`/uploads/:imageName`, async (req, res) => {
     res.sendFile(path.join(__dirname, `./uploads/${req.params.imageName}`));
-  });
+});
 
 app.post('/', upload.fields([
     { name: 'hero', maxCount: 1 },
@@ -77,16 +106,22 @@ app.post('/', upload.fields([
             ...req.body
         };
 
-        // save the images to the local storage
-        const db = JSON.parse(fs.readFileSync('./db.json', 'utf-8'));
-        const updatedDB = [...db, newCompany];
-        fs.writeFileSync('./db.json', JSON.stringify(updatedDB));
+        // // save the images to the local storage
+        // const db = JSON.parse(fs.readFileSync('./db.json', 'utf-8'));
+        // const updatedDB = [...db, newCompany];
+        // fs.writeFileSync('./db.json', JSON.stringify(updatedDB));
 
         // save the other data to MySQL database
         const createdCompany = await LandingPage.create(newCompany);
 
         // update the filenames with the id of the new company
         const id = createdCompany.id;
+
+        const newUser = {
+            uid: req.body.uid,
+            companyId: id
+        }
+        const createdUser = await User.create(newUser)
         const filesToUpdate = ['hero', 'image1', 'image2', 'image3', 'testimonialImg1', 'testimonialImg2', 'testimonialImg3'];
         for (const fieldName of filesToUpdate) {
             const file = req.files[fieldName];
@@ -139,7 +174,7 @@ app.post('/form', async (req, res) => {
             phone: req.body.phone,
             email: req.body.email,
             companyId: req.body.companyId,
-            leadStatus:0
+            leadStatus: 0
         };
 
         const createdForm = await FormModel.create(newForm);
@@ -170,7 +205,7 @@ app.put('/:id', upload.fields([
 
         if (req.files) {
             const fields = ['hero', 'image1', 'image2', 'image3', 'testimonialImg1', 'testimonialImg2', 'testimonialImg3'];
-        
+
             for (const field of fields) {
                 if (req.files[field]) {
                     const fileName = req.files[field][0].filename;
