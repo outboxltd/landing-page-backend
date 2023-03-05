@@ -9,7 +9,7 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 8000;
 
-const admin = require("firebase-admin")
+// const admin = require("firebase-admin")
 const LandingPage = require("./models/companyModel.js")
 const FormModel = require("./models/formModel.js")
 const User = require("./models/userModel.js")
@@ -21,14 +21,14 @@ app.use(express.urlencoded({ extended: true }));
 
 require('dotenv').config();
 
-admin.initializeApp({
-    credential: admin.credential.cert({
-        projectId: process.env.PROJECT_ID,
-        privateKey: process.env.PRIVATE_KEY?.replace(/\\n/g, '\n'),
-        clientEmail: process.env.CLIENT_EMAIL,
-    }),
-    databaseURL: process.env.DATABASE_URL
-});
+// admin.initializeApp({
+//     credential: admin.credential.cert({
+//         projectId: process.env.PROJECT_ID,
+//         privateKey: process.env.PRIVATE_KEY?.replace(/\\n/g, '\n'),
+//         clientEmail: process.env.CLIENT_EMAIL,
+//     }),
+//     databaseURL: process.env.DATABASE_URL
+// });
 
 
 
