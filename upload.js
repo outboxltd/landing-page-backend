@@ -2,6 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const tinify = require("tinify");
 require('dotenv').config()
+const fs = require('fs');
 
 tinify.key = process.env.TINIFY_KEY;
 
@@ -43,10 +44,15 @@ const upload = multer({
 
 const compressImage = async (filePath) => {
     try {
+        
+        fs.writeFileSync('tmp', filePath);
         const source = tinify.fromFile(filePath);
         if (path.extname(filePath) === '.png' || path.extname(filePath) === '.jpeg') {
+            fs.writeFileSync('tmp', filePath);
             await source.toFormat('webp').toFile(filePath.replace(/\.\w+$/, '.webp'));
         } else if (path.extname(filePath) === '.webp') {
+            fs.writeFileSync('tmp', filePath);
+            
             await source.toFile(filePath);
         }
     } catch (error) {

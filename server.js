@@ -96,10 +96,6 @@ app.post('/', upload.fields([
             ...req.body
         };
 
-        // // save the images to the local storage
-        // const db = JSON.parse(fs.readFileSync('./db.json', 'utf-8'));
-        // const updatedDB = [...db, newCompany];
-        // fs.writeFileSync('./db.json', JSON.stringify(updatedDB));
 
         // save the other data to MySQL database
         const createdCompany = await LandingPage.create(newCompany);
@@ -176,53 +172,103 @@ app.post('/form', async (req, res) => {
     }
 });
 
-app.put('/:id', upload.fields([
-    { name: 'hero', maxCount: 1 },
-    { name: 'image1', maxCount: 1 },
-    { name: 'image2', maxCount: 1 },
-    { name: 'image3', maxCount: 1 },
-    { name: 'testimonialImg1', maxCount: 1 },
-    { name: 'testimonialImg2', maxCount: 1 },
-    { name: 'testimonialImg3', maxCount: 1 }
-]), async (req, res) => {
+
+
+
+app.put('/:id', async (req, res) => {
     try {
         const landingPage = await LandingPage.findByPk(req.params.id);
 
         if (!landingPage) {
             return res.status(404).send({ message: 'Item not found.' });
         }
-        let updatedFields = { ...req.body };
 
-        if (req.files) {
+        // Delete existing images
+
+
+        if (req.body.hero) {
+
+            fs.unlink(`./uploads/${landingPage.hero.match(/\/([^/]+)$/)[1]}`, (err) => {
+                if (err) console.error(err);
+            });
+
+        }
+        if (req.body.image1) {
+            fs.unlink(`./uploads/${landingPage.image1.match(/\/([^/]+)$/)[1]}`, (err) => {
+                if (err) console.error(err);
+            });
+        }
+        if (req.body.image2) {
+            fs.unlink(`./uploads/${landingPage.image2.match(/\/([^/]+)$/)[1]}`, (err) => {
+                if (err) console.error(err);
+            });
+        }
+        if (req.body.image3) {
+            fs.unlink(`/uploads/${landingPage.image3.match(/\/([^/]+)$/)[1]}`, (err) => {
+                if (err) console.error(err);
+            });
+        }
+        if (req.body.testimonialImg1) {
+            fs.unlink(`./uploads/${landingPage.testimonialImg1.match(/\/([^/]+)$/)[1]}`, (err) => {
+                if (err) console.error(err);
+            });
+        }
+        if (req.body.testimonialImg2) {
+            fs.unlink(`./uploads/${landingPage.testimonialImg2.match(/\/([^/]+)$/)[1]}`, (err) => {
+                if (err) console.error(err);
+            });
+        }
+        if (req.body.testimonialImg3) {
+            fs.unlink(`./uploads/${landingPage.testimonialImg3.match(/\/([^/]+)$/)[1]}`, (err) => {
+                if (err) console.error(err);
+            });
+        }
+
+        // Upload new images
+        const uploadMiddleware = upload.fields([
+            { name: 'hero', maxCount: 1 },
+            { name: 'image1', maxCount: 1 },
+            { name: 'image2', maxCount: 1 },
+            { name: 'image3', maxCount: 1 },
+            { name: 'testimonialImg1', maxCount: 1 },
+            { name: 'testimonialImg2', maxCount: 1 },
+            { name: 'testimonialImg3', maxCount: 1 },
+        ]);
+        uploadMiddleware(req, res, async (err) => {
+            if (err) {
+                console.error('Unable to upload images:', err);
+                return res.status(500).send({ message: 'Failed to upload images.' });
+            }
+
+            // Compress and update image URLs
+            let updatedFields = { ...req.body };
             const fields = ['hero', 'image1', 'image2', 'image3', 'testimonialImg1', 'testimonialImg2', 'testimonialImg3'];
-
             for (const field of fields) {
                 if (req.files[field]) {
+
                     const fileName = req.files[field][0].filename;
-                    await compressImage(`./uploads/${fileName}`);
-                    const imageUrl = `${BASE_URL}/uploads/${fileName}`.replace(/\.\w+$/, '.webp');
-                    updatedFields[field] = imageUrl;
-                    if (/\.(jpg|jpeg|png)$/.test(fileName)) {
-                        fs.unlink(`./uploads/${fileName}`, (err) => {
-                            if (err) console.error(err);
-                        });
+                    if (fileName) {
+                        const imageUrl = `${BASE_URL}/uploads/${fileName}`.replace(/\.\w+$/, '.webp');
+                        const newFileName = `./uploads/${fileName}`.replace(/\.\w+$/, '.webp')
+                        fs.renameSync(`./uploads/${fileName}`, newFileName);
+                        await compressImage(newFileName);
+
+                        updatedFields[field] = imageUrl;
                     }
                 }
             }
-        }
 
-        await landingPage.update(updatedFields);
+            await landingPage.update(updatedFields);
 
-        const updatedLandingPage = await LandingPage.findByPk(req.params.id);
+            const updatedLandingPage = await LandingPage.findByPk(req.params.id);
 
-        res.send(updatedLandingPage);
-
+            res.send(updatedLandingPage);
+        });
     } catch (err) {
         console.error('Unable to update landing page:', err);
         res.status(500).send({ message: 'Failed to update landing page.' });
     }
 });
-
 
 
 
@@ -237,7 +283,7 @@ app.delete('/:id', async (req, res) => {
         const deletedItem = { ...landingPage.toJSON() };
 
         // Delete the images from the file system
-        if (deletedItem.hero) { 
+        if (deletedItem.hero) {
             fs.unlink(`./uploads/${deletedItem.id}-hero.webp`, (err) => {
                 if (err) console.error(err);
             });
