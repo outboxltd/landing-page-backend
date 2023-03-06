@@ -14,9 +14,17 @@ const User = db.define('User', {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    companyId: {
-        type: DataTypes.INTEGER,
+    companyIds: {
+        type: DataTypes.JSON,
         allowNull: true
+    },
+    phoneNumber:{
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    telegramId:{
+        type: DataTypes.STRING,
+        allowNull: true,
     },
 });
 

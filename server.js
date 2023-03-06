@@ -4,7 +4,7 @@ const cors = require('cors');
 const fs = require('fs');
 const { upload, compressImage } = require('./upload.js')
 const path = require('path');
-
+const bot = require('./bot.js')
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -73,6 +73,25 @@ app.get(`/uploads/:imageName`, async (req, res) => {
     res.sendFile(path.join(__dirname, `./uploads/${req.params.imageName}`));
 });
 
+app.get('/user/:uid', async (req, res) => {
+    try {
+        const user = await User.findOne({
+            where: {
+                uid: req.params.uid
+            }
+        });
+        if (!user) {
+            res.status(404).json({ message: 'User not found' });
+        } else {
+            res.status(200).json(user);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+
 app.post('/', upload.fields([
     { name: 'hero', maxCount: 1 },
     { name: 'image1', maxCount: 1 },
@@ -102,12 +121,8 @@ app.post('/', upload.fields([
 
         // update the filenames with the id of the new company
         const id = createdCompany.id;
+        //!!update the user with the company id
 
-        const newUser = {
-            uid: req.body.uid,
-            companyId: id
-        }
-        const createdUser = await User.create(newUser)
         const filesToUpdate = ['hero', 'image1', 'image2', 'image3', 'testimonialImg1', 'testimonialImg2', 'testimonialImg3'];
         for (const fieldName of filesToUpdate) {
             const file = req.files[fieldName];
@@ -172,7 +187,22 @@ app.post('/form', async (req, res) => {
     }
 });
 
+app.post('/user', async (req, res) => {
+    try {
+        console.log(req.body);
+        const newUser = {
+            uid: req.body.uid,
+            phoneNumber: req.body.phoneNumber
+        }
+        const createdUser = await User.create(newUser)
 
+
+        res.status(201).json(createdUser);
+    } catch (err) {
+        console.error('Unable to create user:', err);
+        res.status(500).send({ message: 'Failed to create user.' });
+    }
+});
 
 
 app.put('/:id', async (req, res) => {
