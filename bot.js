@@ -14,6 +14,11 @@ const checkPhoneExist = async (phoneNumber) => {
     const user = await User.findOne({ where: { phoneNumber }, });
     return user;
 };
+const updateUserTelegramId = async (id, telegramId) => {
+
+    await User.update({ telegramId },{where: { id }});
+};
+
 
 const FromNumber = 'LandingPageBot';
 const Token = process.env.MESSAGE_TOKEN;
@@ -32,6 +37,8 @@ const sendMessage = (ToNumber, MassageText) => {
             console.log(error);
         });
 };
+
+
 
 const bot = new Bot(process.env.BOT_TOKEN);
 
@@ -103,7 +110,7 @@ bot.on("message", async (ctx) => {
         if (ctx.session.user) {
             const smsToken = Math.floor(Math.random() * 10000 + 1000).toString();
             ctx.session.smsTokenFlag.token = smsToken;
-            // ctx.session.smsTokenFlag.flag = true;
+            ctx.session.smsTokenFlag.flag = true;
             sendMessage(ctx.message.text, `Your Temporary Verification Token is ${smsToken}`);
             ctx.reply('A Verification Token is Sent To The Provided Number! Send it Back Here To Verify');
             return;
@@ -122,7 +129,9 @@ bot.on("message", async (ctx) => {
             await updateUserTelegramId(ctx.session.user.id, ctx.message.from.id.toString());
         }
 
-
+        await ctx.reply('Verified Successfully!');
+        ctx.session.smsTokenFlag.token = '';
+        ctx.session.smsTokenFlag.flag = false;
 
 
     }

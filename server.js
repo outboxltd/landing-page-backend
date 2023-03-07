@@ -53,12 +53,7 @@ app.get('/landingPages/:uid', async (req, res) => {
     const uid = req.params.uid;
 
     try {
-        // Find all the user records matching the uid and get their companyId values
-        const userRecords = await User.findAll({ where: { uid: uid } });
-        const companyIds = userRecords.map((record) => record.companyId);
-
-        // Find all the LandingPage records matching each companyId
-        const landingPages = await LandingPage.findAll({ where: { id: companyIds } });
+        const landingPages = await LandingPage.findAll({ where: { uid: uid } });
 
         res.json({ landingPages: landingPages });
     } catch (err) {
@@ -121,7 +116,14 @@ app.post('/', upload.fields([
 
         // update the filenames with the id of the new company
         const id = createdCompany.id;
-        //!!update the user with the company id
+        const user = await User.findOne({ where: { uid: req.body.uid } });
+        const companyIds = user.companyIds || [];
+        if (!companyIds.includes(id)) {
+            companyIds.push(id);
+        }
+        await user.update({ companyIds });
+
+
 
         const filesToUpdate = ['hero', 'image1', 'image2', 'image3', 'testimonialImg1', 'testimonialImg2', 'testimonialImg3'];
         for (const fieldName of filesToUpdate) {
