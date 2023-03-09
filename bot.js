@@ -284,8 +284,85 @@ bot.on("message", async (ctx) => {
     if (ctx.session.editLPFlag.flag) {
         const field = ctx.session.editLPFlag.field;
         const fieldEditedTo = ctx.message.text;
+        if (ctx.update.message.photo) {
+            if (field === "hero") {
+                const file = await ctx.getFile();
+                // Download the file to a temporary location.
+                const path = await file.download(`${dest}/hero.webp`);
+                // Print the file path.
+                console.log("File saved at ", path);
+            }
+            if (field === "image1") {
+                const file = await ctx.getFile();
+                const path = await file.download(`${dest}/image1.webp`);
+                console.log("File saved at ", path);
+            }
+            if (field === "image2") {
+                const file = await ctx.getFile();
+                const path = await file.download(`${dest}/image2.webp`);
+                console.log("File saved at ", path);
+            }
+            if (field === "image3") {
+                const file = await ctx.getFile();
+                const path = await file.download(`${dest}/image3.webp`);
+                console.log("File saved at ", path);
+            }
+            if (field === "testimonialImg1") {
+                const file = await ctx.getFile();
+                const path = await file.download(`${dest}/testimonialImg1.webp`);
+                console.log("File saved at ", path);
+            }
+            if (field === "testimonialImg2") {
+                const file = await ctx.getFile();
+                const path = await file.download(`${dest}/testimonialImg2.webp`);
+                console.log("File saved at ", path);
+            }
+            if (field === "testimonialImg3") {
+                const file = await ctx.getFile();
+                const path = await file.download(`${dest}/testimonialImg3.webp`);
+                console.log("File saved at ", path);
+            }
+        }
+        const filesToUpdate = ['hero', 'image1', 'image2', 'image3', 'testimonialImg1', 'testimonialImg2', 'testimonialImg3'];
+        for (const file of filesToUpdate) {
+            // const file = req.files[fieldName];
+            if (file) {
+                const fileData = file[0];
+                let prefix = '';
+                if (file === 'hero') {
+                    prefix = 'hero';
+                } else if (file.startsWith('image')) {
+                    prefix = `image${file.slice(-1)}`;
+                } else {
+                    prefix = `testimonialImg${file.slice(-1)}`;
+                }
+                // const extension = fileData.originalname.split('.').pop();
+                const oldFilePath = `./uploads/${prefix}.webp`;
+                const newFilePath = `./uploads/${ctx.session.currentLP.id}-${prefix}.webp`.replace(/\s+/g, '-');
+                if (fs.existsSync(oldFilePath)) {
+                    fs.renameSync(oldFilePath, newFilePath);
+                } else {
+                    console.log(`File ${oldFilePath} not found.`);
+                }
+            }
+        }
+
         const lp={ ...ctx.session.currentLP.toJSON(), [field]: fieldEditedTo }
-        const updatedLP = await editLP(lp);
+        const imagePath = (imageName) => `${BASE_URL}/uploads/${ctx.session.currentLP.id}-${imageName}`;
+
+        updatedCompany = {
+            ...lp,
+            hero: imagePath('hero.webp'),
+            image1: imagePath('image1.webp'),
+            image2: imagePath('image2.webp'),
+            image3: imagePath('image3.webp'),
+            testimonialImg1: imagePath('testimonialImg1.webp'),
+            testimonialImg2: imagePath('testimonialImg2.webp'),
+            testimonialImg3: imagePath('testimonialImg3.webp')
+        };
+        
+        
+        const updatedLP = await editLP(updatedCompany);
         if (updatedLP) {
             ctx.session.editLPFlag.flag = false;
             ctx.session.editLPFlag.field = '';
