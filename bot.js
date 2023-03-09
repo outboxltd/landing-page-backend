@@ -18,10 +18,12 @@ const {
     getUserLPsByUid,
     sendMessage,
     markupStartingOptions,
-    markupUserEvents,
+    markupUserLPs,
     setCurrentLP,
     addNewLP,
-    DeleteLP
+    DeleteLP,
+    markupUserLPFields,
+    editLP
 } = require('./botUtills.js');
 
 const dest = path.join(__dirname, './uploads');
@@ -48,7 +50,7 @@ bot.use(session({
             values: {},
             index: 0
         },
-        editEventMessagesFlag: {
+        editLPMessagesFlag: {
             flag: false,
             type: ''
         },
@@ -72,7 +74,7 @@ bot.command("start", async (ctx) => {
             markupStartingOptions(ctx, ctx.session.userLandingPages.length === 0);
             return;
         }
-        markupUserEvents(ctx);
+        markupUserLPs(ctx);
         return;
 
     }
@@ -94,10 +96,18 @@ bot.on("callback_query:data", async (ctx) => {
         await ctx.reply(Object.values(LPPairs)[ctx.session.newLPFlag.index].alternative);
     }
 
+    if (query === LPPairs[query]?.dbColumn) {
+        ctx.session.editLPFlag.flag = true;
+        ctx.session.editLPFlag.field = LPPairs[query].dbColumn;
+        ctx.reply(LPPairs[query].alternative);
+        return;
+    }
     if (query === 'delete lp') {
-        DeleteLP(ctx)
+        await DeleteLP(ctx)
+        ctx.session.currentLP = null;
         await ctx.reply('Landing page deleted');
-        markupUserEvents(ctx);
+        markupUserLPs(ctx);
+        return;
     }
 
     if (!ctx.session.currentLP && await setCurrentLP(ctx, query)) {
@@ -105,10 +115,15 @@ bot.on("callback_query:data", async (ctx) => {
         return;
     }
 
+    if (query === 'Edit Landing Page') {
+        markupUserLPFields(ctx);
+        return;
+    }
+
 
     if (query === 'Cancel') {
         ctx.session.currentLP = null;
-        markupUserEvents(ctx);
+        markupUserLPs(ctx);
         return;
     }
 
@@ -123,9 +138,9 @@ bot.on("message", async (ctx) => {
     //* if received a phone number
     if (ctx.message.entities !== undefined && ctx.message.entities[0].type === "phone_number") {
         if (ctx.session.user) {
-            ctx.session.userEvents = await getUserLPsByUid(ctx.session.user.uid);
-            if (ctx.session.userEvents.length === 1) {
-                ctx.session.currentLP = ctx.session.userEvents[0];
+            ctx.session.userLPs = await getUserLPsByUid(ctx.session.user.uid);
+            if (ctx.session.userLPs.length === 1) {
+                ctx.session.currentLP = ctx.session.userLPs[0];
                 markupStartingOptions(ctx);
                 return;
             }
@@ -159,72 +174,61 @@ bot.on("message", async (ctx) => {
         await ctx.reply('Verified Successfully!');
         ctx.session.smsTokenFlag.token = '';
         ctx.session.smsTokenFlag.flag = false;
-        markupUserEvents(ctx)
+        markupUserLPs(ctx)
     }
+
     if (ctx.session.newLPFlag.flag) {
         let value = Object.values(LPPairs)[ctx.session.newLPFlag.index];
-        if(ctx.message.text==="null"){
+        if (ctx.message.text === "null") {
             ctx.session.newLPFlag.values[value.dbColumn] = null;
         }
-        else{
+        else {
             ctx.session.newLPFlag.values[value.dbColumn] = ctx.message.text;
         }
 
-        if(ctx.update.message.photo){
-            if(value.dbColumn==="hero"){
+        if (ctx.update.message.photo) {
+            if (value.dbColumn === "hero") {
                 const file = await ctx.getFile();
                 // Download the file to a temporary location.
                 const path = await file.download(`${dest}/hero.webp`);
                 // Print the file path.
                 console.log("File saved at ", path);
             }
-            if(value.dbColumn==="image1"){
+            if (value.dbColumn === "image1") {
                 const file = await ctx.getFile();
-                // Download the file to a temporary location.
                 const path = await file.download(`${dest}/image1.webp`);
-                // Print the file path.
                 console.log("File saved at ", path);
             }
-            if(value.dbColumn==="image2"){
+            if (value.dbColumn === "image2") {
                 const file = await ctx.getFile();
-                // Download the file to a temporary location.
                 const path = await file.download(`${dest}/image2.webp`);
-                // Print the file path.
                 console.log("File saved at ", path);
             }
-            if(value.dbColumn==="image3"){
+            if (value.dbColumn === "image3") {
                 const file = await ctx.getFile();
-                // Download the file to a temporary location.
                 const path = await file.download(`${dest}/image3.webp`);
-                // Print the file path.
                 console.log("File saved at ", path);
             }
-            if(value.dbColumn==="testimonialImg1"){
+            if (value.dbColumn === "testimonialImg1") {
                 const file = await ctx.getFile();
-                // Download the file to a temporary location.
                 const path = await file.download(`${dest}/testimonialImg1.webp`);
-                // Print the file path.
                 console.log("File saved at ", path);
             }
-            if(value.dbColumn==="testimonialImg2"){
+            if (value.dbColumn === "testimonialImg2") {
                 const file = await ctx.getFile();
-                // Download the file to a temporary location.
                 const path = await file.download(`${dest}/testimonialImg2.webp`);
-                // Print the file path.
                 console.log("File saved at ", path);
             }
-            if(value.dbColumn==="testimonialImg3"){
+            if (value.dbColumn === "testimonialImg3") {
                 const file = await ctx.getFile();
-                // Download the file to a temporary location.
                 const path = await file.download(`${dest}/testimonialImg3.webp`);
-                // Print the file path.
                 console.log("File saved at ", path);
             }
         }
         if (Object.keys(ctx.session.newLPFlag.values).length === Object.keys(LPPairs).length) {
             ctx.session.newLPFlag.values.uid = ctx.session.user.uid;
             const addedLP = await addNewLP(ctx.session.newLPFlag.values);
-            const id=addedLP.id;
+            const id = addedLP.id;
             const filesToUpdate = ['hero', 'image1', 'image2', 'image3', 'testimonialImg1', 'testimonialImg2', 'testimonialImg3'];
             for (const file of filesToUpdate) {
                 // const file = req.files[fieldName];
@@ -265,7 +269,7 @@ bot.on("message", async (ctx) => {
             ctx.session.newLPFlag.values = {};
             ctx.session.newLPFlag.index = 0;
             if (addedLP) {
-                markupUserEvents(ctx, true, 'Company Added Successfully');
+                markupUserLPs(ctx, true, 'Company Added Successfully');
                 return;
             }
             ctx.reply('something went wrong');
@@ -277,15 +281,21 @@ bot.on("message", async (ctx) => {
         return;
     }
 
-    // bot.on(":photo", async (ctx) => {
-    //     // Prepare the file for download.
-    //     const file = await ctx.getFile();
-    //     // Download the file to a temporary location.
-    //     const url = file.getUrl();
-    //     const path = await file.download(`${dest}/file1.webp`);
-    //     // Print the file path.
-    //     console.log("File saved at ", path);
-    // })
+    if (ctx.session.editLPFlag.flag) {
+        const field = ctx.session.editLPFlag.field;
+        const fieldEditedTo = ctx.message.text;
+        const lp={ ...ctx.session.currentLP.toJSON(), [field]: fieldEditedTo }
+        const updatedLP = await editLP(lp);
+        if (updatedLP) {
+            ctx.session.editLPFlag.flag = false;
+            ctx.session.editLPFlag.field = '';
+            await ctx.reply('עודכן!');
+            markupUserLPFields(ctx, true, 'רוצה לעדכן משהו אחר ?');
+            return;
+        }
+        ctx.reply('something went wrong');
+        return;
+    }
 
 
 });

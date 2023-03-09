@@ -102,10 +102,10 @@ const sendMessage = (ToNumber, MassageText) => {
         });
 };
 
-const markupStartingOptions = async (ctx, userHasNoEvents) => {
+const markupStartingOptions = async (ctx, userHasNoLPs) => {
     const inlineKeyboard = new InlineKeyboard();
 
-    if (userHasNoEvents) {
+    if (userHasNoLPs) {
         inlineKeyboard.text('New Landing Page').row();
         ctx.reply("Hello, what you want to do ?", { reply_markup: inlineKeyboard });
         return;
@@ -114,10 +114,10 @@ const markupStartingOptions = async (ctx, userHasNoEvents) => {
     inlineKeyboard.text('Edit Current Landing Page', 'Edit Landing Page').row();
     inlineKeyboard.text('Delete Current Landing page', 'delete lp').row();
     inlineKeyboard.text('Choose A Different Landing Page or Create A New Landing Page', 'Cancel').row();
-    await ctx.reply(`Hello, what you want to do ? current event is ${ctx.session.currentLP.brand}`, { reply_markup: inlineKeyboard });
+    await ctx.reply(`Hello, what you want to do ? current LP is ${ctx.session.currentLP.brand}`, { reply_markup: inlineKeyboard });
 };
 
-const markupUserEvents = async (ctx, isSecondTime, message) => {
+const markupUserLPs = async (ctx, isSecondTime, message) => {
     const inlineKeyboard = new InlineKeyboard();
     ctx.session.userLandingPages = await getUserLPsByUid(ctx.session.user.uid);
     ctx.session.userLandingPages.forEach(lp => {
@@ -134,33 +134,23 @@ const markupUserEvents = async (ctx, isSecondTime, message) => {
     return;
 };
 
-// const markupUserEventFields = async (ctx, isAnotherUpdate, message) => {
-//     const inlineKeyboard = new InlineKeyboard();
+const markupUserLPFields = async (ctx, isAnotherUpdate, message) => {
+    const inlineKeyboard = new InlineKeyboard();
 
-//     if (isAnotherUpdate) {
-//         ctx.session.currentEvent = await getUserEvent(ctx.session.currentEvent.hash);
-//     }
 
-//     Object.keys(ctx.session.currentEvent).forEach(key => {
-//         if (key === 'date') {
-//             inlineKeyboard.text(`${eventPairs[key].alternative} - ${ctx.session.currentEvent[key].toISOString().slice(0, 10)}`, eventPairs[key].dbColumn).row();
-//         }
-//         else if (key === 'time') {
-//             inlineKeyboard.text(`${eventPairs[key].alternative} - ${ctx.session.currentEvent[key].slice(0, 5)}`, eventPairs[key].dbColumn).row();
-//         }
-//         else if (eventPairs[key] !== undefined) {
-//             inlineKeyboard.text(`${eventPairs[key].alternative} - ${ctx.session.currentEvent[key]}`, eventPairs[key].dbColumn).row();
-//         }
-//     });
-//     inlineKeyboard.text('ביטול', 'Cancel Edit Event').row();
 
-//     if (isAnotherUpdate) {
-//         ctx.reply(message, { reply_markup: inlineKeyboard });
-//     }
-//     else {
-//         ctx.reply('what do you want to edit?', { reply_markup: inlineKeyboard });
-//     }
-// };
+    Object.keys(LPPairs).forEach(key => {
+        inlineKeyboard.text(key, key).row();
+    });
+    inlineKeyboard.text('ביטול', 'Cancel').row();
+
+    if (isAnotherUpdate) {
+        ctx.reply(message, { reply_markup: inlineKeyboard });
+    }
+    else {
+        ctx.reply('what do you want to edit?', { reply_markup: inlineKeyboard });
+    }
+};
 
 const addNewLP = async (lp) => {
     const createdCompany = await LandingPage.create(lp);
@@ -174,6 +164,13 @@ const addNewLP = async (lp) => {
     return createdCompany;
 
 };
+
+
+const editLP = async (lp) => {
+    const landingPage = await LandingPage.findByPk(lp.id);
+    await landingPage.update(lp);
+    return landingPage;
+}
 
 const setCurrentLP = (ctx, query) => {
     if (ctx.session.userLandingPages?.length === 1) {
@@ -203,8 +200,10 @@ module.exports = {
     getUserLPsByUid,
     sendMessage,
     markupStartingOptions,
-    markupUserEvents,
+    markupUserLPs,
     setCurrentLP,
     addNewLP,
-    DeleteLP
+    DeleteLP,
+    markupUserLPFields,
+    editLP
 };
