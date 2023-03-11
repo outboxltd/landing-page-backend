@@ -226,6 +226,9 @@ bot.on("message", async (ctx) => {
             }
         }
         if (Object.keys(ctx.session.newLPFlag.values).length === Object.keys(LPPairs).length) {
+            // console.log(ctx.session.user);
+            // console.log(ctx.session.user.User.dataValues.uid)
+            // console.log(ctx.session.user.uid);
             ctx.session.newLPFlag.values.uid = ctx.session.user.uid;
             const addedLP = await addNewLP(ctx.session.newLPFlag.values);
             const id = addedLP.id;

@@ -121,7 +121,10 @@ const markupUserLPs = async (ctx, isSecondTime, message) => {
     const inlineKeyboard = new InlineKeyboard();
     ctx.session.userLandingPages = await getUserLPsByUid(ctx.session.user.uid);
     ctx.session.userLandingPages.forEach(lp => {
-        inlineKeyboard.text(lp.brand).row();
+        if(lp.brand!==""){
+            inlineKeyboard.text(lp.brand).row();
+        }
+        
     });
     inlineKeyboard.text('Create New Landing Page').row();
 
@@ -156,11 +159,13 @@ const addNewLP = async (lp) => {
     const createdCompany = await LandingPage.create(lp);
     const user = await User.findOne({ where: { uid: lp.uid } });
     console.log(user);
-    // const companyIds = user.companyIds.length()!==0? user.companyIds: [];
-    // if (!companyIds.includes(lp.id)) {
-    //     companyIds.push(lp.id);
-    // }
-    // await user.update({ companyIds });
+    const companyIds = (user.companyIds ? JSON.parse(user.companyIds) : []);
+    
+    if (!companyIds.includes(user.companyIds)) {
+        console.log(  user.companyIds)
+        companyIds.push(createdCompany.id);
+        await user.update({ companyIds: companyIds });
+    }
     return createdCompany;
 
 };

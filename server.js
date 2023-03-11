@@ -117,11 +117,14 @@ app.post('/', upload.fields([
         // update the filenames with the id of the new company
         const id = createdCompany.id;
         const user = await User.findOne({ where: { uid: req.body.uid } });
-        const companyIds = user.companyIds || [];
-        if (!companyIds.includes(id)) {
+        const companyIds = (user.companyIds ? JSON.parse(user.companyIds) : []);
+        
+        if (!companyIds.includes(user.companyIds)) {
+            console.log(  user.companyIds)
             companyIds.push(id);
+            await user.update({ companyIds: companyIds });
         }
-        await user.update({ companyIds });
+        
 
 
 
@@ -307,7 +310,6 @@ app.put('/:id', async (req, res) => {
 app.delete('/:id', async (req, res) => {
     try {
         const landingPage = await LandingPage.findByPk(req.params.id);
-        const user = await User.findOne({ where: { companyId: req.params.id } });
         if (!landingPage) {
             return res.status(404).send({ message: 'Item not found.' });
         }
@@ -352,7 +354,6 @@ app.delete('/:id', async (req, res) => {
         }
 
         await landingPage.destroy();
-        await user.destroy();
         res.send(deletedItem);
 
     } catch (err) {
